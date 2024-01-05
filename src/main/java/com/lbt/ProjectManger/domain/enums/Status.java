@@ -1,4 +1,4 @@
-package com.lbt.ProjectManger.domain;
+package com.lbt.ProjectManger.domain.enums;
 
 public enum Status {
 	DONE,

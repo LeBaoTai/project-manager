@@ -1,6 +1,6 @@
 package com.lbt.ProjectManger.domain.entities;
 
-import com.lbt.ProjectManger.domain.Role;
+import com.lbt.ProjectManger.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +24,6 @@ public class UserEntity {
 
 	private String email;
 
+	@Enumerated(EnumType.STRING)
 	private Role role;
 }

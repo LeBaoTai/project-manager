@@ -1,6 +1,9 @@
 package com.lbt.ProjectManger.domain.dto;
 
-import com.lbt.ProjectManger.domain.Status;
+import com.lbt.ProjectManger.domain.enums.Status;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
