@@ -24,12 +24,16 @@ public class TaskEntity {
 
 	private String description;
 
-	private LocalDateTime start_date;
+	private LocalDateTime startDate;
 
-	private LocalDateTime end_date;
+	private LocalDateTime endDate;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
 	private int priority;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "project_id")
+	private ProjectEntity projectId;
 }
