@@ -1,5 +1,6 @@
 package com.lbt.ProjectManger.domain.entities;
 
+import com.lbt.ProjectManger.domain.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,8 @@ public class ProjectEntity {
 
 	private String description;
 
-	private int status;
+	@Enumerated(EnumType.STRING)
+	private Status status;
 
 	private LocalDateTime start_date;
 

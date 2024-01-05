@@ -1,6 +1,6 @@
 package com.lbt.ProjectManger.domain.entities;
 
-import com.lbt.ProjectManger.domain.Status;
+import com.lbt.ProjectManger.domain.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +28,7 @@ public class TaskEntity {
 
 	private LocalDateTime end_date;
 
+	@Enumerated(EnumType.STRING)
 	private Status status;
 
 	private int priority;

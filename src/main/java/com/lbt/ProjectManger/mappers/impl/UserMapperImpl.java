@@ -1,4 +1,4 @@
-package com.lbt.ProjectManger.mappers.Impl;
+package com.lbt.ProjectManger.mappers.impl;
 
 import com.lbt.ProjectManger.domain.dto.UserDto;
 import com.lbt.ProjectManger.domain.entities.UserEntity;

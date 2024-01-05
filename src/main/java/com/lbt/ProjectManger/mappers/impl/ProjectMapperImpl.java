@@ -1,10 +1,9 @@
-package com.lbt.ProjectManger.mappers.Impl;
+package com.lbt.ProjectManger.mappers.impl;
 
 import com.lbt.ProjectManger.domain.dto.ProjectDto;
 import com.lbt.ProjectManger.domain.entities.ProjectEntity;
 import com.lbt.ProjectManger.mappers.Mapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Component;
 
 @Component
