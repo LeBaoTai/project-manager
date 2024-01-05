@@ -1,6 +1,7 @@
 package com.lbt.ProjectManger.domain.dto;
 
 import com.lbt.ProjectManger.domain.entities.UserEntity;
+import com.lbt.ProjectManger.domain.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,13 @@ public class ProjectDto {
 
 	private String description;
 
-	private int status;
+	private Status status;
 
-	private LocalDateTime start;
+	private LocalDateTime startDate;
 
-	private LocalDateTime end;
+	private LocalDateTime endDate;
 
 	private UserDto owner;
+
+	private int members;
 }

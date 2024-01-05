@@ -27,11 +27,13 @@ public class ProjectEntity {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-	private LocalDateTime start_date;
+	private LocalDateTime startDate;
 
-	private LocalDateTime end_end;
+	private LocalDateTime endDate;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private UserEntity owner;
+
+	private int members;
 }

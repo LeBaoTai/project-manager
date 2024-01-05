@@ -22,11 +22,13 @@ public class TaskDto {
 
 	private String Description;
 
-	private LocalDateTime start;
+	private LocalDateTime startDate;
 
-	private LocalDateTime end;
+	private LocalDateTime endDate;
 
 	private Status status;
 
 	private int priority;
+
+	private ProjectDto projectDto;
 }
