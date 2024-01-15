@@ -104,4 +104,87 @@ public class TestProjectControllerIntegrationTest {
 				MockMvcResultMatchers.jsonPath("$.content[0].name").value("Backend Java")
 		);
 	}
+
+	@Test
+	public void testFullUpdateReturnHttpStatusCode200() throws Exception {
+		ProjectEntity projectEntity = TestDataUtil.createTestProjectEntity();
+		ProjectEntity savedProject = projectService.updateProject(projectEntity.getId(), projectEntity);
+		savedProject.setId(projectEntity.getId());
+
+		String jsonSavedProject = objectMapper.writeValueAsString(savedProject);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("/api/projects/" + projectEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonSavedProject)
+		).andExpect(
+				MockMvcResultMatchers.status().isOk()
+		);
+	}
+
+	@Test
+	public void testFullUpdateReturnUpdatedProject() throws Exception {
+		ProjectEntity projectEntity = TestDataUtil.createTestProjectEntity();
+		ProjectEntity savedProject = projectService.updateProject(projectEntity.getId(), projectEntity);
+		savedProject.setId(projectEntity.getId());
+		savedProject.setName("Khong lam gi ca");
+
+		String jsonSavedProject = objectMapper.writeValueAsString(savedProject);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("/api/projects/" + projectEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonSavedProject)
+		).andExpect(
+				MockMvcResultMatchers.jsonPath("$.name").value("Khong lam gi ca")
+		);
+	}
+
+	@Test
+	public void testPartialUpdateReturnHttpStatusCode200() throws Exception {
+		ProjectEntity projectEntity = TestDataUtil.createTestProjectEntity();
+		projectService.save(projectEntity);
+		ProjectEntity savedProject = projectService.partialUpdate(projectEntity.getId(), projectEntity);
+		String jsonSavedProject = objectMapper.writeValueAsString(savedProject);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.patch("/api/projects/" + projectEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonSavedProject)
+		).andExpect(
+				MockMvcResultMatchers.status().isOk()
+		);
+	}
+
+	@Test
+	public void testPartialUpdateReturnUpdatedProject() throws Exception {
+		ProjectEntity projectEntity = TestDataUtil.createTestProjectEntity();
+		projectService.save(projectEntity);
+		ProjectEntity savedProject = projectService.partialUpdate(projectEntity.getId(), projectEntity);
+		savedProject.setId(projectEntity.getId());
+		savedProject.setName("Khong lam gi ca");
+
+		String jsonSavedProject = objectMapper.writeValueAsString(savedProject);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.patch("/api/projects/" + projectEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonSavedProject)
+		).andExpect(
+				MockMvcResultMatchers.jsonPath("$.name").value("Khong lam gi ca")
+		);
+	}
+
+	@Test
+	public void testDeleteProjectReturnHttpStatusCode204() throws Exception {
+		ProjectEntity projectEntity = TestDataUtil.createTestProjectEntity();
+		projectService.save(projectEntity);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.delete("/api/projects/" + projectEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+		).andExpect(
+				MockMvcResultMatchers.status().isNoContent()
+		);
+	}
 }
