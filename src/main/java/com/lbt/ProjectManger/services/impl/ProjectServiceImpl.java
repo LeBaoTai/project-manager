@@ -30,7 +30,38 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
+	public ProjectEntity updateProject(Long id ,ProjectEntity projectEntity) {
+		projectEntity.setId(id);
+		return projectRepository.save(projectEntity);
+	}
+	@Override
+	public ProjectEntity partialUpdate(Long id, ProjectEntity projectEntity) {
+		projectEntity.setId(id);
+
+		return projectRepository.findById(id).map(existingProject -> {
+			Optional.ofNullable(projectEntity.getName()).ifPresent(existingProject::setName);
+			Optional.ofNullable(projectEntity.getDescription()).ifPresent(existingProject::setDescription);
+			Optional.ofNullable(projectEntity.getStatus()).ifPresent(existingProject::setStatus);
+			Optional.ofNullable(projectEntity.getStartDate()).ifPresent(existingProject::setStartDate);
+			Optional.ofNullable(projectEntity.getEndDate()).ifPresent(existingProject::setEndDate);
+			Optional.ofNullable(projectEntity.getMembers()).ifPresent(existingProject::setMembers);
+			return projectRepository.save(existingProject);
+		}).orElseThrow(() -> new RuntimeException("Not found Project"));
+	}
+
+	@Override
+	public boolean isExists(Long id) {
+		return projectRepository.existsById(id);
+	}
+
+
+	@Override
 	public Page<ProjectEntity> findAll(Pageable pageable) {
 		return projectRepository.findAll(pageable);
+	}
+
+	@Override
+	public void delete(Long id) {
+		projectRepository.deleteById(id);
 	}
 }

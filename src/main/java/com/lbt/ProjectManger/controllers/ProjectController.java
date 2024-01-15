@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -46,5 +45,36 @@ public class ProjectController {
 	public Page<ProjectDto> findManyProject(Pageable pageable) {
 		Page<ProjectEntity> projects = projectService.findAll(pageable);
 		return projects.map(projectMapper::mapTo);
+	}
+
+	@PutMapping(path = "/projects/{id}")
+	public ResponseEntity<ProjectDto> updateProject(@PathVariable("id") Long id, @RequestBody ProjectDto projectDto) {
+		boolean existProject = projectService.isExists(id);
+		if (!existProject) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		ProjectEntity projectEntity = projectMapper.mapFrom(projectDto);
+		ProjectEntity updatedProject = projectService.updateProject(id, projectEntity);
+		return new ResponseEntity<>(projectMapper.mapTo(updatedProject), HttpStatus.OK);
+	}
+
+	@PatchMapping(path = "/projects/{id}")
+	public ResponseEntity<ProjectDto> partialUpdateProject(@PathVariable("id") Long id, @RequestBody ProjectDto projectDto) {
+		boolean existProject = projectService.isExists(id);
+		if(!existProject) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		ProjectEntity projectEntity = projectMapper.mapFrom(projectDto);
+		ProjectEntity partialUpdated = projectService.partialUpdate(id, projectEntity);
+
+		return new ResponseEntity<>(projectMapper.mapTo(partialUpdated), HttpStatus.OK);
+	}
+
+	@DeleteMapping(path = "/projects/{id}")
+	public ResponseEntity deleteProject(@PathVariable("id") Long id) {
+		projectService.delete(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

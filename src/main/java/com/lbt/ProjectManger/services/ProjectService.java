@@ -13,4 +13,12 @@ public interface ProjectService {
 	Optional<ProjectEntity> findOne(Long id);
 
 	Page<ProjectEntity> findAll(Pageable pageable);
+
+	ProjectEntity updateProject(Long id, ProjectEntity projectEntity);
+
+	boolean isExists(Long id);
+
+	ProjectEntity partialUpdate(Long id, ProjectEntity projectEntity);
+
+	void delete(Long id);
 }
