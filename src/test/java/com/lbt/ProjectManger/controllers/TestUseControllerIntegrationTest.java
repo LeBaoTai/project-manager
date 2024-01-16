@@ -2,6 +2,7 @@ package com.lbt.ProjectManger.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lbt.ProjectManger.TestDataUtil;
+import com.lbt.ProjectManger.domain.dto.UserDto;
 import com.lbt.ProjectManger.domain.entities.UserEntity;
 import com.lbt.ProjectManger.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -60,6 +61,103 @@ public class TestUseControllerIntegrationTest {
 						.content(userJson)
 		).andExpect(
 				MockMvcResultMatchers.jsonPath("$.username").value("le bao tai")
+		);
+	}
+
+	@Test
+	public void testUserFullUpdateReturnHttpStatusCode200() throws Exception {
+		UserEntity userEntity = TestDataUtil.createTestUserEntity();
+		UserEntity savedUser = userService.save(userEntity);
+		savedUser.setId(userEntity.getId());
+		String jsonUpdateUser = objectMapper.writeValueAsString(savedUser);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("/api/users/" + savedUser.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonUpdateUser)
+		).andExpect(
+				MockMvcResultMatchers.status().isOk()
+		);
+	}
+
+	@Test
+	public void testUserFullUpdateReturnUpdatedUser() throws Exception {
+		UserEntity userEntity = TestDataUtil.createTestUserEntity();
+		UserEntity savedUser = userService.save(userEntity);
+		savedUser.setId(userEntity.getId());
+		savedUser.setPassword("haylam");
+		String jsonUpdateUser = objectMapper.writeValueAsString(savedUser);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("/api/users/" + savedUser.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonUpdateUser)
+		).andExpect(
+				MockMvcResultMatchers.jsonPath("$.password").value("haylam")
+		);
+	}
+
+	@Test
+	public void testUserPartialUpdateReturnHttpStatusCode200() throws Exception {
+		UserEntity userEntity = TestDataUtil.createTestUserEntity();
+		userService.save(userEntity);
+
+		UserDto userDto = TestDataUtil.createTestUserDto();
+		userDto.setPassword("haylam");
+
+		String jsonPartialUpdate = objectMapper.writeValueAsString(userDto);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.patch("/api/users/" + userEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonPartialUpdate)
+		).andExpect(
+				MockMvcResultMatchers.status().isOk()
+		);
+	}
+
+	@Test
+	public void testUserPartialUpdateReturnUpdatedUser() throws Exception {
+		UserEntity userEntity = TestDataUtil.createTestUserEntity();
+		userService.save(userEntity);
+
+		UserDto userDto = TestDataUtil.createTestUserDto();
+		userDto.setPassword("haylam");
+
+		String jsonPartialUpdate = objectMapper.writeValueAsString(userDto);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.patch("/api/users/" + userEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(jsonPartialUpdate)
+		).andExpect(
+				MockMvcResultMatchers.jsonPath("$.password").value("haylam")
+		);
+	}
+
+	@Test
+	public void testUserDeleteReturnStatusCode204WhenNoUserExisting() throws Exception {
+		UserEntity userEntity = TestDataUtil.createTestUserEntity();
+		userService.save(userEntity);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.delete("/api/users/" + 12)
+						.contentType(MediaType.APPLICATION_JSON)
+		).andExpect(
+				MockMvcResultMatchers.status().isNoContent()
+		);
+	}
+
+	@Test
+	public void testUserDeleteReturnStatusCode204WhenUserExisting() throws Exception {
+		UserEntity userEntity = TestDataUtil.createTestUserEntity();
+		userService.save(userEntity);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.delete("/api/users/" + userEntity.getId())
+						.contentType(MediaType.APPLICATION_JSON)
+		).andExpect(
+				MockMvcResultMatchers.status().isNoContent()
 		);
 	}
 }

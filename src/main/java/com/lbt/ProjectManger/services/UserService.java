@@ -13,4 +13,12 @@ public interface UserService {
 	Optional<UserEntity> findOne(Long id);
 
 	Page<UserEntity> findMany(Pageable pageable);
+
+	boolean isExist(Long id);
+
+	UserEntity update(Long id, UserEntity userEntity);
+
+	UserEntity partialUpdate(Long id, UserEntity userEntity);
+
+	void delete(Long id);
 }

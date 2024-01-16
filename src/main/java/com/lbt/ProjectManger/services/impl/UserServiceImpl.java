@@ -28,4 +28,31 @@ public class UserServiceImpl implements UserService {
 	public Page<UserEntity> findMany(Pageable pageable) {
 		return userRepository.findAll(pageable);
 	}
+
+	@Override
+	public boolean isExist(Long id) {
+		return userRepository.existsById(id);
+	}
+
+	@Override
+	public UserEntity update(Long id, UserEntity userEntity) {
+		userEntity.setId(id);
+		return userRepository.save(userEntity);
+	}
+
+	@Override
+	public UserEntity partialUpdate(Long id, UserEntity userEntity) {
+		userEntity.setId(id);
+		return userRepository.findById(id).map(existUser -> {
+			Optional.ofNullable(userEntity.getPassword()).ifPresent(existUser::setPassword);
+			Optional.ofNullable(userEntity.getEmail()).ifPresent(existUser::setEmail);
+			Optional.ofNullable(userEntity.getRole()).ifPresent(existUser::setRole);
+			return userRepository.save(existUser);
+		}).orElseThrow(() -> new RuntimeException("Not found USER"));
+	}
+
+	@Override
+	public void delete(Long id) {
+		userRepository.deleteById(id);
+	}
 }

@@ -6,10 +6,12 @@ import com.lbt.ProjectManger.mappers.Mapper;
 import com.lbt.ProjectManger.services.impl.UserServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.HttpURLConnection;
 import java.util.Optional;
 
 @RestController
@@ -44,5 +46,39 @@ public class UserController {
 	public Page<UserDto> listUser(Pageable pageable) {
 		Page<UserEntity> listUsers = userService.findMany(pageable);
 		return listUsers.map(userMapper::mapTo);
+	}
+
+	@PutMapping(path = "/users/{id}")
+	public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+		boolean userExist = userService.isExist(id);
+		if(!userExist) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		UserEntity userEntity = userMapper.mapFrom(userDto);
+		UserEntity updatedUser = userService.update(id, userEntity);
+
+		return new ResponseEntity<>(userMapper.mapTo(updatedUser), HttpStatus.OK);
+	}
+
+	@PatchMapping(path = "/users/{id}")
+	public ResponseEntity<UserDto> partialUpdate(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+		boolean userExist = userService.isExist(id);
+		if(!userExist) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		UserEntity userEntity = userMapper.mapFrom(userDto);
+		UserEntity updatedUser = userService.partialUpdate(id, userEntity);
+
+		return new ResponseEntity<>(userMapper.mapTo(updatedUser), HttpStatus.OK);
+	}
+
+	@DeleteMapping(path = "/users/{id}")
+	public ResponseEntity deleteUser(@PathVariable("id")Long id) {
+		boolean userExist = userService.isExist(id);
+		if(!userExist) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		userService.delete(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
